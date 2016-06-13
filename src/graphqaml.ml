@@ -1,7 +1,7 @@
 open Lexer
 open Lexing
 
-include GQLTypes
+include Gqltypes
 
 let parseQuery q =    
     try Some (Parser.root_query Lexer.read (Lexing.from_string q)) with
