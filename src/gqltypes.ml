@@ -8,17 +8,13 @@ type argument =
     value : argument_value;
   }
 
-module GQLField = struct
-  type t = 
-    { identifier : string;
-      fields : t list }
-end
+type gql_field =
+  { identifier : string;
+    fields : gql_field list }
 
 
-module GQLQuery = struct
-  type t =
-      { identifier : string; 
-          fields : GQLField.t list;
-          arguments : argument list;
-      }
-end
+type gql_query =
+  { identifier : string; 
+    fields : gql_field list;
+    arguments : argument list;
+  }

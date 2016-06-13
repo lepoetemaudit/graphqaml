@@ -16,8 +16,8 @@ root_query:
     ;
 
 fields:
-    | ident = IDENTIFIER; LEFT_BRACE; RIGHT_BRACE; fs = fields;
-        { { fields = []; identifier = ident; } :: fs}
+    | ident = IDENTIFIER; LEFT_BRACE; subfields = fields; RIGHT_BRACE; fs = fields;
+        { { fields = subfields; identifier = ident; } :: fs}
     | ident = IDENTIFIER;; fs = fields;
         { { fields = []; identifier = ident; } :: fs}
     | (* empty *) { [] }
