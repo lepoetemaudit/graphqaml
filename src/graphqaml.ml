@@ -3,18 +3,9 @@ open Lexing
 
 include Gqltypes
 
-let parseQuery q =    
-    try Some (Parser.root_query Lexer.read (Lexing.from_string q)) with
+let parse_query q =    
+    try Ok (Parser.root_query Lexer.read (Lexing.from_string q)) with
     | SyntaxError msg ->
-        print_string msg;
-        None
+        Error msg;
     | Parser.Error ->
-        print_string "Parser error\n";
-        None
-
-(*        
-let _ =
-    (match result with
-    | Some q -> "Got a valid query, identifier: " ^ q.identifier    
-    | None -> "Invalid query")
-    |> print_string *)
+        Error "Undefined Parser Error (sorry)\n";
