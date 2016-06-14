@@ -16,5 +16,6 @@ rule read =
     parse [' ' '\t' '\n'] { read lexbuf }
     | '{'   { LEFT_BRACE }
     | '}'    { RIGHT_BRACE }
+    | ':'   { COLON }
     | ['a'-'z']* { IDENTIFIER (Lexing.lexeme lexbuf) }
     | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }

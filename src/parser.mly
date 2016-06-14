@@ -1,5 +1,6 @@
 %token LEFT_BRACE
 %token RIGHT_BRACE
+%token COLON
 %token <string> IDENTIFIER
 
 %{
@@ -16,8 +17,12 @@ root_query:
     ;
 
 fields:
-    | ident = IDENTIFIER; LEFT_BRACE; subfields = fields; RIGHT_BRACE; fs = fields;
-        { { fields = subfields; identifier = ident; } :: fs}
-    | ident = IDENTIFIER;; fs = fields;
-        { { fields = []; identifier = ident; } :: fs}
+    | ref = field_ref; LEFT_BRACE; subfields = fields; RIGHT_BRACE; fs = fields;
+        { { fields = subfields; identifier = fst ref; alias = snd ref } :: fs}
+    | ref = field_ref; fs = fields;
+        { { fields = []; identifier = fst ref; alias = snd ref; } :: fs}
     | (* empty *) { [] }
+
+field_ref:
+    | ident = IDENTIFIER; { ( ident, None ) };
+    | alias = IDENTIFIER; COLON; ident = IDENTIFIER { ( ident, Some alias; ) }
