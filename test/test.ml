@@ -51,7 +51,12 @@ let test_serialisation test_ctxt =
                       query_text serialized_result) 
                serialized_result query_text
 
-let parseTests =
+(* Dummy schema test *)
+let test_schema test_ctxt =
+  assert_equal (Graphqaml.parse_schema "{ query { bob }}") (Ok [Query { name = "bob"}])
+  
+
+let test_suite =
   "graphqaml_tests" >:::
   [ "test_empty_query" >:: test_parser_empty_query;
     "test_single_field" >:: test_parser_single_field;
@@ -60,9 +65,12 @@ let parseTests =
     "test_alias" >:: test_alias; 
 
     "test_serialisation" >:: test_serialisation;
+
+    "test_schema" >:: test_schema;
   ]
 
 
 let () =
-  run_test_tt_main parseTests
+  run_test_tt_main test_suite
+
 

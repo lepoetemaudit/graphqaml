@@ -2,6 +2,7 @@ open Lexer
 open Lexing
 
 include Gqltypes
+include Schema
 
 let parse_query q =    
     try Ok (Parser.root_query Lexer.read (Lexing.from_string q)) with
@@ -24,3 +25,10 @@ let query_to_string ast =
     "{" ^ (ast.identifier) ^ "{" ^ 
     ((List.map field_to_string ast.fields) |> String.concat " ")
     ^ "}}"
+
+let parse_schema q =
+    try Ok (Schema_parser.schema Schema_lexer.read (Lexing.from_string q)) with
+    | SyntaxError msg ->
+        Error msg
+    | Parser.Error ->
+        Error "Undefined Parser Error (sorry)\n"
