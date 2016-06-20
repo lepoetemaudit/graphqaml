@@ -14,7 +14,7 @@ root_query:
     | LEFT_BRACE; ident = IDENTIFIER; LEFT_BRACE; fs = fields;
        RIGHT_BRACE; RIGHT_BRACE;
         { { fields = fs ; arguments = []; identifier = ident; } }
-    ;
+    
 
 fields:
     | ref = field_ref; LEFT_BRACE; subfields = fields; RIGHT_BRACE; fs = fields;

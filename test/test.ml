@@ -53,7 +53,13 @@ let test_serialisation test_ctxt =
 
 (* Dummy schema test *)
 let test_schema test_ctxt =
-  assert_equal (Graphqaml.parse_schema "{ query { bob }}") (Ok [Query { name = "bob"}])
+  assert_equal 
+    (Graphqaml.parse_schema "{ type bob { jim: int }}")
+    (Ok [ Type { name = "bob"; fields = [ { name = "jim"; type_name = "int"; null = true }]} ]);
+
+  assert_equal 
+    (Graphqaml.parse_schema "{ type bob { jim: int! }}")
+    (Ok [ Type { name = "bob"; fields = [ { name = "jim"; type_name = "int"; null = false }]} ])   
   
 
 let test_suite =

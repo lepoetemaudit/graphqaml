@@ -15,8 +15,15 @@ type t = {
     schema: root_schema
 }
 
+type field = {
+    name: string;
+    type_name: string;
+    null: bool;
+}
+
 type type_ = {
-    name: string
+    name: string;
+    fields: field list
 }
 
 type schema_item = 
