@@ -9,11 +9,11 @@
 %token <string> IDENTIFIER
 
 %{
-open Schema
+open Schema_types
 
 %}
 
-%start <Schema.schema_item list> schema
+%start <Schema_types.schema_item list> schema
 %%
 
 schema:

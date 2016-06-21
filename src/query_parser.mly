@@ -4,10 +4,10 @@
 %token <string> IDENTIFIER
 
 %{
-open Gqltypes
+open Query_types
 %}
 
-%start <Gqltypes.gql_query> root_query
+%start <Query_types.gql_query> root_query
 %%
 
 root_query:

@@ -1,15 +1,16 @@
-open Lexer
 open Lexing
 
-include Gqltypes
-include Schema
+include Query_types
+include Schema_types
 
-let parse_query q =    
-    try Ok (Parser.root_query Lexer.read (Lexing.from_string q)) with
+let parse_query q =
+    let open Query_parser in
+    let open Query_lexer in
+    try Ok (root_query Query_lexer.read (Lexing.from_string q)) with
     | SyntaxError msg ->
         Error msg
-    | Parser.Error ->
-        Error "Undefined Parser Error (sorry)\n"
+    | Error ->
+        Error "Undefined Parsing Error (sorry)\n"
 
 let rec field_to_string field =
     (match field.alias with
@@ -27,8 +28,10 @@ let query_to_string ast =
     ^ "}}"
 
 let parse_schema q =
-    try Ok (Schema_parser.schema Schema_lexer.read (Lexing.from_string q)) with
+    let open Schema_parser in
+    let open Schema_lexer in
+    try Ok (schema read (Lexing.from_string q)) with
     | SyntaxError msg ->
         Error msg
-    | Parser.Error ->
+    | Error ->
         Error "Undefined Parser Error (sorry)\n"

@@ -12,7 +12,7 @@ Library "GraphQaml"
                    oUnit,
                    threads
   BuildTools:      ocamlbuild
-  Modules:         Graphqaml, Lexer, Parser, Gqltypes
+  Modules:         Graphqaml
   FindLibName:     Graphqaml
 
 Executable "test_parsing"
