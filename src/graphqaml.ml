@@ -1,5 +1,3 @@
-open Lexing
-
 include Query_types
 include Schema_types
 
@@ -18,7 +16,8 @@ let rec field_to_string field =
     | None -> "") ^
     field.identifier ^ 
     (if List.length field.fields > 0 then 
-        " {" ^ ((List.map field_to_string field.fields) |> String.concat " ") ^ "}"
+        " {" ^ ((List.map field_to_string field.fields) 
+        |> String.concat " ") ^ "}"
     else "")
 
 let query_to_string ast =
