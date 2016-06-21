@@ -3,7 +3,7 @@ open Graphqaml
 
 let test_parser_empty_query test_ctxt =
   assert_equal 
-    (Graphqaml.parse_query "{ empty {} }")
+    (Graphqaml.parse_query "{ empty }")
     ( Ok { fields = []; identifier = "empty"; arguments = [] } )
 
 (* Test that field name appears *)
