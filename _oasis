@@ -10,7 +10,8 @@ Library "GraphQaml"
   Path:            src
   BuildDepends: 
                    oUnit,
-                   threads
+                   threads,
+                   core
   BuildTools:      ocamlbuild
   Modules:         Graphqaml, Schema_parser, Schema_types, Schema_lexer, Query_parser, Query_lexer, Query_types
   FindLibName:     Graphqaml

@@ -8,17 +8,13 @@
 %token EXCLAMATION
 %token <string> IDENTIFIER
 
-%{
-open Schema_types
-
-%}
+%{ open Schema_types %}
 
 %start <Schema_types.schema_item list> schema
 %%
 
 schema:
-    | LEFT_BRACE; items = schema_items; RIGHT_BRACE; { items }
-    ;
+    | LEFT_BRACE; items = schema_items; RIGHT_BRACE; { items }    
 
 schema_items:
     | (* empty *) { [] }
