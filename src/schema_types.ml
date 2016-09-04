@@ -1,47 +1,43 @@
-type query = {
+module Query = struct
+  type t  = {
     name: string
-}
-[@@deriving show]
-
-type mutation = {
-    name: string
-}
-
-type root_schema = {
-    queries: query list;
-    mutations: mutation list;
-}
-
-type t = {
-    schema: root_schema
-}
-
-module Field = struct
-    type t = {
-        name: string;
-        type_name: string;
-        null: bool;
-        list: bool;
-    }
-    [@@deriving show]
+  }
+  [@@deriving show]
 end
 
-
+module Field = struct
+  type t = {
+      name: string;
+      type_name: string;
+      null: bool;
+      list: bool;
+  }
+  [@@deriving show]
+end
 
 module Type = struct
-    type t = {
-        name: string;
-        fields: Field.t list
-    }
-    [@@deriving show]
+  type t = {
+    name: string;
+    fields: Field.t list
+  }
+  [@@deriving show]
 
-    let built_ins = ["int"; "string"; "float"; "boolean"; "id"]
+  let built_ins = ["int"; "string"; "float"; "boolean"; "id"]
+end
+
+module Enum = struct
+  type t = {
+    name: string;
+    values: string list;
+  }
+  [@@deriving show]
 end
 
 module SchemaItem = struct
-    type t = 
-        | Query of query 
-        | Type of Type.t
-        | Empty
-    [@@deriving show]
+  type t = 
+  | Query of Query.t 
+  | Type of Type.t
+  | Enum of Enum.t
+  | Empty
+  [@@deriving show]
 end

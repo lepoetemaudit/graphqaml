@@ -51,7 +51,6 @@ let test_alias test_ctxt =
                  alias = Some "name";                 
                } ] } )
 
-
 (* Test serialisation (round trip) *)
 let test_serialisation test_ctxt =
   let query_text = "{query{name age location {town country}}}" in
@@ -60,7 +59,7 @@ let test_serialisation test_ctxt =
                   | _ -> failwith "Bad query" in
   let serialized_result = (Graphqaml.query_to_string query_ast) in
   assert_equal ~msg: (Printf.sprintf "Expected %s, got %s" 
-                      query_text serialized_result) 
+                      query_text serialized_result)
                serialized_result query_text
 
 (* Test schema type parsing *)
@@ -120,25 +119,36 @@ let test_list_fields test_ctxt =
                                  ; F.null = true
                                  ; F.list = false }]} ]);;                                 
 
+let test_enums test_ctxt =
+  let module SI = Graphqaml.SchemaItem in
+  let module E = Graphqaml.Enum in
+  let module F = Graphqaml.Field in
+  let enums = Graphqaml.parse_schema "{ enum HUMAN { TED DOUGAL JACK MRS_DOYLE }}" in
+  assert_equal 
+    ~printer:schema_result_printer
+    enums
+    (Ok [ SI.Enum { E.name = "HUMAN"
+                  ; E.values = [ "TED"; "DOUGAL"; "JACK"; "MRS_DOYLE" ] } ] );;
+
 let test_suite =
   "graphqaml_tests" >:::
   [ (* Query parsing tests *)
-    "test_empty_query" >:: test_parser_empty_query;
-    "test_single_field" >:: test_parser_single_field;
-    "test_parser_sub_fields" >:: test_parser_sub_fields;
-    "test_error_message" >:: test_error_message; 
-    "test_alias" >:: test_alias; 
+    "test_empty_query"          >:: test_parser_empty_query;
+    "test_single_field"         >:: test_parser_single_field;
+    "test_parser_sub_fields"    >:: test_parser_sub_fields;
+    "test_error_message"        >:: test_error_message; 
+    "test_alias"                >:: test_alias; 
 
     (* Query serialisatoin tests *)
-    "test_serialisation" >:: test_serialisation;
+    "test_serialisation"        >:: test_serialisation;
 
     (* Schema parsing tests *)
     "test_builtin_schema_types" >:: test_builtin_schema_types;
-    "test_schema_new_types" >:: test_schema_new_types;
-    "test_nullable_fields" >:: test_nullable_fields; 
-    "test_list_fields" >:: test_list_fields;
+    "test_schema_new_types"     >:: test_schema_new_types;
+    "test_nullable_fields"      >:: test_nullable_fields; 
+    "test_list_fields"          >:: test_list_fields;
+    "test_enums"                >:: test_enums;
   ]
-
 
 let () =
   run_test_tt_main test_suite

@@ -7,6 +7,7 @@
 %token COLON
 %token QUERY
 %token TYPE
+%token ENUM
 %token EXCLAMATION
 %token <string> IDENTIFIER
 
@@ -21,9 +22,14 @@ schema:
 schema_items:
     | (* empty *) { [] }
     | TYPE; t = type_; rs = schema_items; { t :: rs }
-    | QUERY; LEFT_BRACE; bob = IDENTIFIER; RIGHT_BRACE; si = schema_items; 
-        { SchemaItem.Query { name = bob; } :: si }
+    | ENUM; name = IDENTIFIER; LEFT_BRACE; values = enum_values; RIGHT_BRACE; si = schema_items;
+        { SchemaItem.Enum { Enum.name = name; Enum.values = values } :: si }
+    | QUERY; LEFT_BRACE; name = IDENTIFIER; RIGHT_BRACE; si = schema_items; 
+        { SchemaItem.Query { Query.name = name; } :: si }
     
+enum_values:
+    | (*empty *) { [] }
+    | ident = IDENTIFIER; values = enum_values; { ident :: values }
 
 type_:
     | ident = IDENTIFIER; LEFT_BRACE; fields = type_field; RIGHT_BRACE; 

@@ -16,11 +16,12 @@ rule read =
     parse [' ' '\t' '\n'] { read lexbuf }
     | "query"    { QUERY }
     | "type"     { TYPE }
+    | "enum"     { ENUM }
     | '{'        { LEFT_BRACE }
     | '}'        { RIGHT_BRACE }
     | '['        { LEFT_SQUARE_BRACE }
     | ']'        { RIGHT_SQUARE_BRACE }
     | ':'        { COLON }
     | '!'        { EXCLAMATION }
-    | ['a'-'z']* { IDENTIFIER (Lexing.lexeme lexbuf) }
+    | ['a'-'z' 'A'-'Z' '_']* { IDENTIFIER (Lexing.lexeme lexbuf) }
     | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
