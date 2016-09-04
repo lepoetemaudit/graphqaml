@@ -54,12 +54,17 @@ let test_serialisation test_ctxt =
                serialized_result query_text
 
 (* Test schema type parsing *)
-let test_schema_types test_ctxt =
+let test_builtin_schema_types test_ctxt =
   (match Graphqaml.parse_schema "{ type bob { jim: int }}" with
-  | Error err -> print_string err;
+  | Error err -> failwith err;
   | Ok _ -> ())
-  
-  ;;
+
+(* Test references to new types *)
+let test_schema_new_types test_ctxt =
+  (match Graphqaml.parse_schema ("{ type person { name: int } " ^
+                                 "  type employee { person: person } }") with
+  | Error err -> failwith err;
+  | Ok _ -> ())
 
 (*
   assert_equal 
@@ -73,15 +78,20 @@ let test_schema_types test_ctxt =
 
 let test_suite =
   "graphqaml_tests" >:::
-  [ "test_empty_query" >:: test_parser_empty_query;
+  [ (* Query parsing tests *)
+    "test_empty_query" >:: test_parser_empty_query;
     "test_single_field" >:: test_parser_single_field;
     "test_parser_sub_fields" >:: test_parser_sub_fields;
     "test_error_message" >:: test_error_message; 
     "test_alias" >:: test_alias; 
 
+    (* Query serialisatoin tests *)
     "test_serialisation" >:: test_serialisation;
 
-    "test_schema" >:: test_schema_types;
+    (* Schema parsing tests *)
+    "test_builtin_schema_types" >:: test_builtin_schema_types;
+    "test_schema_new_types" >:: test_schema_new_types;
+
   ]
 
 

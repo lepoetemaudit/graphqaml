@@ -33,19 +33,31 @@ let query_to_string ast =
 
 exception BadType of string;;
 
-let _check_type t =
-    Some t.name
-
 let _validate_schema schema =
-    (* check all types *)
+    (* Discover all newly declared types *)    
     let types = List.filter_map schema 
         (function | Type type_ -> Some type_ 
-                  | _ -> None) in
-    let bad_types = List.filter_map types _check_type in 
-    
-    match List.hd bad_types with
-    | Some bad_type -> Error bad_type 
-    | None -> Ok schema
+                  | _ -> None) in    
+
+    (* Extract the names of new types (and builtins) into a set *)
+    let registered_types = types 
+                     |> List.map ~f:(fun t -> t.Type.name) 
+                     |> List.append Type.built_ins
+                     |> String.Set.of_list in
+
+    (* Extract all referenced type names into a set *)
+    let type_refs = types
+                    |> List.map ~f:(fun t -> t.Type.fields) 
+                    |> List.concat
+                    |> List.map ~f:(fun f -> f.Field.type_name)
+                    |> String.Set.of_list
+                    in
+
+    (* Discover any types referenced but not declared *)
+    match String.Set.diff type_refs registered_types |> String.Set.to_list with
+    | [] -> Ok schema
+    | failing_types -> 
+        Error ("Failing types: " ^ (String.concat failing_types ~sep: ", "))
 
 let _parse_schema q =
     let open Schema_parser in

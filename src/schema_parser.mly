@@ -25,12 +25,12 @@ schema_items:
 
 type_:
     | ident = IDENTIFIER; LEFT_BRACE; fields = type_field; RIGHT_BRACE; 
-        { Type { name = ident; fields = fields } }
+        { Type { name = ident; Type.fields = fields } }
 
 type_field:
     | (* empty *) { [] }
     | ident = IDENTIFIER; COLON; kind = IDENTIFIER; rs = type_field; 
-        { { null = true; name = ident; type_name = kind; } :: rs }
+        { { Field.null = true; name = ident; type_name = kind; } :: rs }
 
     | ident = IDENTIFIER; COLON; kind = IDENTIFIER; EXCLAMATION; rs = type_field; 
-        { { null = false; name = ident; type_name = kind; } :: rs }    
+        { { Field.null = false; name = ident; type_name = kind; } :: rs }

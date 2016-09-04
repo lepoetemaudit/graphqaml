@@ -1,5 +1,4 @@
 S src
 S test
 B _build/src
-PKG ounit
-PKG core
+PKG ounit core

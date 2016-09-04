@@ -15,18 +15,27 @@ type t = {
     schema: root_schema
 }
 
-type field = {
-    name: string;
-    type_name: string;
-    null: bool;
-}
+module Field = struct
+    type t = {
+        name: string;
+        type_name: string;
+        null: bool;
+    }
+end
 
-type type_ = {
-    name: string;
-    fields: field list
-}
+
+
+module Type = struct
+    type t = {
+        name: string;
+        fields: Field.t list
+    }
+
+    let built_ins = ["int"; "string"; "float"; "boolean"; "id"]
+end
+
 
 type schema_item = 
     | Query of query 
-    | Type of type_
+    | Type of Type.t
     | Empty
