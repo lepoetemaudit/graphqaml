@@ -40,9 +40,14 @@ let _validate_schema schema =
         (function | SI.Type type_ -> Some type_ 
                   | _ -> None) in    
 
+    let enums = List.filter_map schema
+        (function | SI.Enum enum -> Some enum
+                  | _ -> None) in
+
     (* Extract the names of new types (and builtins) into a set *)
     let registered_types = types 
-                           |> List.map ~f:(fun t -> t.Type.name) 
+                           |> List.map ~f:(fun t -> t.Type.name)
+                           |> List.append (List.map ~f:(fun e -> e.Enum.name) enums) 
                            |> List.append Type.built_ins
                            |> String.Set.of_list in
 

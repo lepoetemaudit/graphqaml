@@ -75,6 +75,7 @@ let test_schema_new_types test_ctxt =
   | Error err -> failwith err;
   | Ok _ -> ())
 
+(* Exclamation marks indicate non-nullable fields *)
 let test_nullable_fields test_ctxt =
   let module SI = Graphqaml.SchemaItem in
   let module T = Graphqaml.Type in
@@ -95,6 +96,7 @@ let test_nullable_fields test_ctxt =
                                   ; F.null = false
                                   ; F.list = false }]} ]);;
   
+(* Types inside [] represent lists *)
 let test_list_fields test_ctxt =
   let module SI = Graphqaml.SchemaItem in
   let module T = Graphqaml.Type in
@@ -119,11 +121,33 @@ let test_list_fields test_ctxt =
                                  ; F.null = true
                                  ; F.list = false }]} ]);;                                 
 
+let test_enum_refs test_ctxt =
+  let module SI = Graphqaml.SchemaItem in
+  let module E = Graphqaml.Enum in
+  let module T = Graphqaml.Type in
+  let module F = Graphqaml.Field in
+  let enums = Graphqaml.parse_schema 
+    "{ enum HUMAN { TED DOUGAL JACK MRS_DOYLE } type bob { jim: HUMAN } }" in
+  
+  assert_equal 
+    ~printer:schema_result_printer
+    (Ok [ SI.Enum { E.name = "HUMAN"
+                  ; E.values = [ "TED"; "DOUGAL"; "JACK"; "MRS_DOYLE" ] } 
+        ; SI.Type { T.name = "bob"
+                  ; T.fields = [ { F.name = "jim"
+                                 ; F.type_name = "HUMAN"
+                                 ; F.null = true
+                                 ; F.list = false } ]                  
+                  } 
+        ] )
+     enums;;
+
 let test_enums test_ctxt =
   let module SI = Graphqaml.SchemaItem in
   let module E = Graphqaml.Enum in
   let module F = Graphqaml.Field in
-  let enums = Graphqaml.parse_schema "{ enum HUMAN { TED DOUGAL JACK MRS_DOYLE }}" in
+  let enums = Graphqaml.parse_schema 
+    "{ enum HUMAN { TED DOUGAL JACK MRS_DOYLE }}" in
   assert_equal 
     ~printer:schema_result_printer
     enums
@@ -148,6 +172,8 @@ let test_suite =
     "test_nullable_fields"      >:: test_nullable_fields; 
     "test_list_fields"          >:: test_list_fields;
     "test_enums"                >:: test_enums;
+    "test_enum_refs"            >:: test_enum_refs;
+
   ]
 
 let () =
