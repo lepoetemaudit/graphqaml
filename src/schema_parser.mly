@@ -2,6 +2,8 @@
 
 %token LEFT_BRACE
 %token RIGHT_BRACE
+%token LEFT_SQUARE_BRACE
+%token RIGHT_SQUARE_BRACE
 %token COLON
 %token QUERY
 %token TYPE
@@ -29,8 +31,20 @@ type_:
 
 type_field:
     | (* empty *) { [] }
-    | ident = IDENTIFIER; COLON; kind = IDENTIFIER; rs = type_field; 
-        { { Field.null = true; name = ident; type_name = kind; } :: rs }
+    | ident = IDENTIFIER; COLON; lt = listable_type; rs = type_field;                 
+        { 
+            let (nt, is_list) = lt in
+            let (type_name, is_null) = nt in
+            { Field.null = is_null; name = ident; type_name = type_name; Field.list = is_list; } :: rs }
 
-    | ident = IDENTIFIER; COLON; kind = IDENTIFIER; EXCLAMATION; rs = type_field; 
-        { { Field.null = false; name = ident; type_name = kind; } :: rs }
+nullable_type:
+    | kind = IDENTIFIER; EXCLAMATION;
+        { kind, false }
+    | kind = IDENTIFIER;
+        { kind, true }
+
+listable_type:
+    | LEFT_SQUARE_BRACE; nt = nullable_type; RIGHT_SQUARE_BRACE;
+        { ( nt, true) }
+    | nt = nullable_type;
+        { ( nt, false ) }

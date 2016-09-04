@@ -42,9 +42,9 @@ let _validate_schema schema =
 
     (* Extract the names of new types (and builtins) into a set *)
     let registered_types = types 
-                     |> List.map ~f:(fun t -> t.Type.name) 
-                     |> List.append Type.built_ins
-                     |> String.Set.of_list in
+                           |> List.map ~f:(fun t -> t.Type.name) 
+                           |> List.append Type.built_ins
+                           |> String.Set.of_list in
 
     (* Extract all referenced type names into a set *)
     let type_refs = types

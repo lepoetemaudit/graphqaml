@@ -3,6 +3,16 @@ open Graphqaml
 open Core.Std
 open Result
 
+(* Wrap Result.t for @@deriving show *)
+module MRes = struct
+  type ('ok, 'err) t = ('ok, 'err) Result.t = Ok of 'ok |	Error of 'err
+  [@@deriving show]
+end
+
+(* Generate a pretty printer for schema results *)
+let schema_result_printer = 
+  [%show: ((Graphqaml.SchemaItem.t list), string) MRes.t]
+
 let test_parser_empty_query test_ctxt =
   assert_equal
     (Graphqaml.parse_query "{ empty }")
@@ -72,12 +82,43 @@ let test_nullable_fields test_ctxt =
   let module F = Graphqaml.Field in
   assert_equal 
     (Graphqaml.parse_schema "{ type bob { jim: int }}")
-    (Ok [ SI.Type { T.name = "bob"; T.fields = [ { F.name = "jim"; F.type_name = "int"; F.null = true }]} ]);
+    (Ok [ SI.Type { T.name = "bob"
+                  ; T.fields = [ { F.name = "jim" 
+                                 ; F.type_name = "int"
+                                 ; F.null = true
+                                 ; F.list = false }]} ]);
 
   assert_equal 
     (Graphqaml.parse_schema "{ type bob { jim: int! }}")
-    (Ok [ SI.Type { T.name = "bob"; T.fields = [ { F.name = "jim"; F.type_name = "int"; F.null = false }]} ])   
+       (Ok [ SI.Type { T.name = "bob"
+                     ; T.fields = [ { F.name = "jim" 
+                                  ; F.type_name = "int"
+                                  ; F.null = false
+                                  ; F.list = false }]} ]);;
   
+let test_list_fields test_ctxt =
+  let module SI = Graphqaml.SchemaItem in
+  let module T = Graphqaml.Type in
+  let module F = Graphqaml.Field in
+  let v_with_list = Graphqaml.parse_schema "{ type bob { jim: [int] }}" in
+  let v_no_list = Graphqaml.parse_schema "{ type bob { jim: int }}" in
+  assert_equal 
+    ~printer:schema_result_printer
+    v_with_list
+    (Ok [ SI.Type { T.name = "bob"
+                  ; T.fields = [ { F.name = "jim" 
+                                 ; F.type_name = "int"
+                                 ; F.null = true
+                                 ; F.list = true }]} ]);
+
+  assert_equal 
+    ~printer:schema_result_printer
+    v_no_list
+    (Ok [ SI.Type { T.name = "bob"
+                  ; T.fields = [ { F.name = "jim" 
+                                 ; F.type_name = "int"
+                                 ; F.null = true
+                                 ; F.list = false }]} ]);;                                 
 
 let test_suite =
   "graphqaml_tests" >:::
@@ -95,10 +136,9 @@ let test_suite =
     "test_builtin_schema_types" >:: test_builtin_schema_types;
     "test_schema_new_types" >:: test_schema_new_types;
     "test_nullable_fields" >:: test_nullable_fields; 
+    "test_list_fields" >:: test_list_fields;
   ]
 
 
 let () =
   run_test_tt_main test_suite
-
-

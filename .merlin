@@ -1,4 +1,4 @@
 S src
 S test
 B _build/src
-PKG ounit core
+PKG ounit core ppx_deriving.show

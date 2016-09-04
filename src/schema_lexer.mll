@@ -14,11 +14,13 @@ let next_line lexbuf =
 
 rule read =
     parse [' ' '\t' '\n'] { read lexbuf }
-    | "query" { QUERY }
-    | "type" { TYPE }
-    | '{'   { LEFT_BRACE }
-    | '}'    { RIGHT_BRACE }
-    | ':'   { COLON }
-    | '!'   { EXCLAMATION }
+    | "query"    { QUERY }
+    | "type"     { TYPE }
+    | '{'        { LEFT_BRACE }
+    | '}'        { RIGHT_BRACE }
+    | '['        { LEFT_SQUARE_BRACE }
+    | ']'        { RIGHT_SQUARE_BRACE }
+    | ':'        { COLON }
+    | '!'        { EXCLAMATION }
     | ['a'-'z']* { IDENTIFIER (Lexing.lexeme lexbuf) }
     | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
