@@ -35,7 +35,9 @@ module Type = struct
 end
 
 
-type schema_item = 
-    | Query of query 
-    | Type of Type.t
-    | Empty
+module SchemaItem = struct
+    type t = 
+        | Query of query 
+        | Type of Type.t
+        | Empty
+end

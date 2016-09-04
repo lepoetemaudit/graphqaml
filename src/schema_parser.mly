@@ -10,7 +10,7 @@
 
 %{ open Schema_types %}
 
-%start <Schema_types.schema_item list> schema
+%start <Schema_types.SchemaItem.t list> schema
 %%
 
 schema:
@@ -20,12 +20,12 @@ schema_items:
     | (* empty *) { [] }
     | TYPE; t = type_; rs = schema_items; { t :: rs }
     | QUERY; LEFT_BRACE; bob = IDENTIFIER; RIGHT_BRACE; si = schema_items; 
-        { Query { name = bob; } :: si }
+        { SchemaItem.Query { name = bob; } :: si }
     
 
 type_:
     | ident = IDENTIFIER; LEFT_BRACE; fields = type_field; RIGHT_BRACE; 
-        { Type { name = ident; Type.fields = fields } }
+        { SchemaItem.Type { name = ident; Type.fields = fields } }
 
 type_field:
     | (* empty *) { [] }

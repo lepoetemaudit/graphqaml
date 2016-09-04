@@ -34,9 +34,10 @@ let query_to_string ast =
 exception BadType of string;;
 
 let _validate_schema schema =
-    (* Discover all newly declared types *)    
+    (* Discover all newly declared types *)
+    let module SI = SchemaItem in    
     let types = List.filter_map schema 
-        (function | Type type_ -> Some type_ 
+        (function | SI.Type type_ -> Some type_ 
                   | _ -> None) in    
 
     (* Extract the names of new types (and builtins) into a set *)

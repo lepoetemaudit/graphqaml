@@ -66,15 +66,18 @@ let test_schema_new_types test_ctxt =
   | Error err -> failwith err;
   | Ok _ -> ())
 
-(*
+let test_nullable_fields test_ctxt =
+  let module SI = Graphqaml.SchemaItem in
+  let module T = Graphqaml.Type in
+  let module F = Graphqaml.Field in
   assert_equal 
     (Graphqaml.parse_schema "{ type bob { jim: int }}")
-    (Ok [ Type { name = "bob"; fields = [ { name = "jim"; type_name = "int"; null = true }]} ]);
+    (Ok [ SI.Type { T.name = "bob"; T.fields = [ { F.name = "jim"; F.type_name = "int"; F.null = true }]} ]);
 
   assert_equal 
     (Graphqaml.parse_schema "{ type bob { jim: int! }}")
-    (Ok [ Type { name = "bob"; fields = [ { name = "jim"; type_name = "int"; null = false }]} ])   
-  *)
+    (Ok [ SI.Type { T.name = "bob"; T.fields = [ { F.name = "jim"; F.type_name = "int"; F.null = false }]} ])   
+  
 
 let test_suite =
   "graphqaml_tests" >:::
@@ -91,7 +94,7 @@ let test_suite =
     (* Schema parsing tests *)
     "test_builtin_schema_types" >:: test_builtin_schema_types;
     "test_schema_new_types" >:: test_schema_new_types;
-
+    "test_nullable_fields" >:: test_nullable_fields; 
   ]
 
 
