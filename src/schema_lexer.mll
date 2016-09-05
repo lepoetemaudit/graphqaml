@@ -23,5 +23,8 @@ rule read =
     | ']'        { RIGHT_SQUARE_BRACE }
     | ':'        { COLON }
     | '!'        { EXCLAMATION }
-    | ['a'-'z' 'A'-'Z' '_']* { IDENTIFIER (Lexing.lexeme lexbuf) }
+    | ['a'-'z' 
+       'A'-'Z' 
+       '_']*     { IDENTIFIER (Lexing.lexeme lexbuf) }
+    | eof        { EOF }
     | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }

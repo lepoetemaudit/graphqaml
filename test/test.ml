@@ -64,14 +64,14 @@ let test_serialisation test_ctxt =
 
 (* Test schema type parsing *)
 let test_builtin_schema_types test_ctxt =
-  (match Graphqaml.parse_schema "{ type bob { jim: int }}" with
+  (match Graphqaml.parse_schema "type bob { jim: int }" with
   | Error err -> failwith err;
   | Ok _ -> ())
 
 (* Test references to new types *)
 let test_schema_new_types test_ctxt =
-  (match Graphqaml.parse_schema ("{ type person { name: int } " ^
-                                 "  type employee { person: person } }") with
+  (match Graphqaml.parse_schema ("type person { name: int } " ^
+                                 "type employee { person: person }") with
   | Error err -> failwith err;
   | Ok _ -> ())
 
@@ -81,7 +81,7 @@ let test_nullable_fields test_ctxt =
   let module T = Graphqaml.Type in
   let module F = Graphqaml.Field in
   assert_equal 
-    (Graphqaml.parse_schema "{ type bob { jim: int }}")
+    (Graphqaml.parse_schema "type bob { jim: int }")
     (Ok [ SI.Type { T.name = "bob"
                   ; T.fields = [ { F.name = "jim" 
                                  ; F.type_name = "int"
@@ -89,7 +89,7 @@ let test_nullable_fields test_ctxt =
                                  ; F.list = false }]} ]);
 
   assert_equal 
-    (Graphqaml.parse_schema "{ type bob { jim: int! }}")
+    (Graphqaml.parse_schema "type bob { jim: int! }")
        (Ok [ SI.Type { T.name = "bob"
                      ; T.fields = [ { F.name = "jim" 
                                   ; F.type_name = "int"
@@ -101,8 +101,8 @@ let test_list_fields test_ctxt =
   let module SI = Graphqaml.SchemaItem in
   let module T = Graphqaml.Type in
   let module F = Graphqaml.Field in
-  let v_with_list = Graphqaml.parse_schema "{ type bob { jim: [int] }}" in
-  let v_no_list = Graphqaml.parse_schema "{ type bob { jim: int }}" in
+  let v_with_list = Graphqaml.parse_schema "type bob { jim: [int] }" in
+  let v_no_list = Graphqaml.parse_schema "type bob { jim: int }" in
   assert_equal 
     ~printer:schema_result_printer
     v_with_list
@@ -127,7 +127,7 @@ let test_enum_refs test_ctxt =
   let module T = Graphqaml.Type in
   let module F = Graphqaml.Field in
   let enums = Graphqaml.parse_schema 
-    "{ enum HUMAN { TED DOUGAL JACK MRS_DOYLE } type bob { jim: HUMAN } }" in
+    "enum HUMAN { TED DOUGAL JACK MRS_DOYLE } type bob { jim: HUMAN }" in
   
   assert_equal 
     ~printer:schema_result_printer
@@ -147,7 +147,7 @@ let test_enums test_ctxt =
   let module E = Graphqaml.Enum in
   let module F = Graphqaml.Field in
   let enums = Graphqaml.parse_schema 
-    "{ enum HUMAN { TED DOUGAL JACK MRS_DOYLE }}" in
+    "enum HUMAN { TED DOUGAL JACK MRS_DOYLE }" in
   assert_equal 
     ~printer:schema_result_printer
     enums

@@ -9,6 +9,7 @@
 %token TYPE
 %token ENUM
 %token EXCLAMATION
+%token EOF
 %token <string> IDENTIFIER
 
 %{ open Schema_types %}
@@ -17,7 +18,7 @@
 %%
 
 schema:
-    | LEFT_BRACE; items = schema_items; RIGHT_BRACE; { items }    
+    | items = schema_items; EOF; { items }    
 
 schema_items:
     | (* empty *) { [] }
