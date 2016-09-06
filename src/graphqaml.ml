@@ -77,6 +77,3 @@ let _parse_schema q =
 
 let parse_schema q =
     _parse_schema q >>= _validate_schema
-
-    
-  

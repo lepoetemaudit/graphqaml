@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: f8ee7e8748a3d4e2d15e4b83ccc5bb6d)
+# DO NOT EDIT (digest: 829248344225aaf1f980107b9fd38cef)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -16,10 +16,17 @@ true: annot, bin_annot
 "_darcs": not_hygienic
 # Library GraphQaml
 "src/GraphQaml.cmxs": use_GraphQaml
+# Executable gql_gen
+<src/gql_gen.{native,byte}>: pkg_core
+<src/gql_gen.{native,byte}>: pkg_oUnit
+<src/gql_gen.{native,byte}>: pkg_ppx_deriving.show
+<src/gql_gen.{native,byte}>: pkg_threads
+<src/gql_gen.{native,byte}>: use_GraphQaml
 <src/*.ml{,i,y}>: pkg_core
 <src/*.ml{,i,y}>: pkg_oUnit
 <src/*.ml{,i,y}>: pkg_ppx_deriving.show
 <src/*.ml{,i,y}>: pkg_threads
+<src/*.ml{,i,y}>: use_GraphQaml
 # Executable test_parsing
 <test/test.{native,byte}>: pkg_core
 <test/test.{native,byte}>: pkg_oUnit

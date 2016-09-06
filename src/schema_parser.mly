@@ -12,13 +12,17 @@
 %token EOF
 %token <string> IDENTIFIER
 
-%{ open Schema_types %}
+%{ open Schema_types 
+   exception SyntaxError of string
+%}
+
 
 %start <Schema_types.SchemaItem.t list> schema
 %%
 
 schema:
-    | items = schema_items; EOF; { items }    
+    | items = schema_items; EOF; { items }   
+    | ident = IDENTIFIER; { raise (SyntaxError ("Unknown identifier '" ^ ident ^ "'")) } 
 
 schema_items:
     | (* empty *) { [] }
