@@ -17,6 +17,8 @@ rule read =
     | "query"    { QUERY }
     | "type"     { TYPE }
     | "enum"     { ENUM }
+    | "schema"   { SCHEMA }
+    | "mutation" { MUTATION }
     | '{'        { LEFT_BRACE }
     | '}'        { RIGHT_BRACE }
     | '['        { LEFT_SQUARE_BRACE }

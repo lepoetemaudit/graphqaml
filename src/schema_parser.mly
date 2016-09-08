@@ -6,7 +6,9 @@
 %token RIGHT_SQUARE_BRACE
 %token COLON
 %token QUERY
+%token MUTATION
 %token TYPE
+%token SCHEMA
 %token ENUM
 %token EXCLAMATION
 %token EOF
@@ -30,7 +32,17 @@ schema_items:
     | ENUM; name = IDENTIFIER; LEFT_BRACE; values = enum_values; RIGHT_BRACE; si = schema_items;
         { SchemaItem.Enum { Enum.name = name; Enum.values = values } :: si }
     | QUERY; LEFT_BRACE; name = IDENTIFIER; RIGHT_BRACE; si = schema_items; 
-        { SchemaItem.Query { Query.name = name; } :: si }
+        { SchemaItem.Query { Query.name = name; } :: si }    
+    | SCHEMA; LEFT_BRACE; so = schema_root_objs; RIGHT_BRACE; si = schema_items;
+        { SchemaItem.Schema so :: si }
+
+schema_root_objs:
+    | (* empty *) { [] }
+    | QUERY; COLON; type_ = IDENTIFIER; so = schema_root_objs;
+        { ("query", type_) :: so }
+    | MUTATION; COLON; type_ = IDENTIFIER; so = schema_root_objs;
+        { ("mutation", type_) :: so } 
+
     
 enum_values:
     | (*empty *) { [] }
@@ -47,6 +59,7 @@ type_field:
             let (nt, is_list) = lt in
             let (type_name, is_null) = nt in
             { Field.null = is_null; name = ident; type_name = type_name; Field.list = is_list; } :: rs }
+    | ident = IDENTIFIER; { raise (SyntaxError ("Unexpected identifier in type field: " ^ ident)) }
 
 nullable_type:
     | kind = IDENTIFIER; EXCLAMATION;

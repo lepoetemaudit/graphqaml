@@ -33,11 +33,18 @@ module Enum = struct
   [@@deriving show]
 end
 
+module Schema = struct
+  type t = (string * string) list
+  [@@deriving show]
+end
+
 module SchemaItem = struct
-  type t = 
-  | Query of Query.t 
+  type t =
+  | Query of Query.t
   | Type of Type.t
   | Enum of Enum.t
+  | Schema of Schema.t
   | Empty
   [@@deriving show]
 end
+
