@@ -7,10 +7,12 @@
 %token COLON
 %token QUERY
 %token MUTATION
+%token SCALAR
 %token TYPE
 %token SCHEMA
 %token ENUM
 %token EXCLAMATION
+%token <string> STRING
 %token EOF
 %token <string> IDENTIFIER
 
@@ -35,13 +37,15 @@ schema_items:
         { SchemaItem.Query { Query.name = name; } :: si }    
     | SCHEMA; LEFT_BRACE; so = schema_root_objs; RIGHT_BRACE; si = schema_items;
         { SchemaItem.Schema so :: si }
+    | SCALAR; name = IDENTIFIER; si = schema_items;
+        { SchemaItem.Scalar name :: si }
 
 schema_root_objs:
     | (* empty *) { [] }
     | QUERY; COLON; type_ = IDENTIFIER; so = schema_root_objs;
-        { ("query", type_) :: so }
+        { Schema.Query type_ :: so }
     | MUTATION; COLON; type_ = IDENTIFIER; so = schema_root_objs;
-        { ("mutation", type_) :: so } 
+        { Schema.Mutation type_ :: so } 
 
     
 enum_values:
@@ -54,12 +58,17 @@ type_:
 
 type_field:
     | (* empty *) { [] }
-    | ident = IDENTIFIER; COLON; lt = listable_type; rs = type_field;                 
+    | ident = IDENTIFIER; params = field_params; COLON; lt = listable_type; rs = type_field;                 
         { 
             let (nt, is_list) = lt in
             let (type_name, is_null) = nt in
-            { Field.null = is_null; name = ident; type_name = type_name; Field.list = is_list; } :: rs }
+            { Field.null = is_null; name = ident; type_name = type_name; Field.list = is_list; Field.params = params; } :: rs }
     | ident = IDENTIFIER; { raise (SyntaxError ("Unexpected identifier in type field: " ^ ident)) }
+
+field_params:
+    | (* empty *) { [] }
+    | name = IDENTIFIER; COLON; type_ = IDENTIFIER; params = field_params;
+        { { Param.name = name; Param.type_ = type_; Param.default = Value.Nothing; } :: params }
 
 nullable_type:
     | kind = IDENTIFIER; EXCLAMATION;

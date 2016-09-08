@@ -5,12 +5,31 @@ module Query = struct
   [@@deriving show]
 end
 
+module Value = struct
+  type t =
+  | Int of int
+  | Bool of bool
+  | String of string
+  | Nothing
+  [@@deriving show]
+end
+
+module Param = struct
+  type t = {
+    name: string;
+    type_: string;
+    default: Value.t;
+  }
+  [@@deriving show]
+end
+
 module Field = struct
   type t = {
       name: string;
       type_name: string;
       null: bool;
       list: bool;
+      params: Param.t list; 
   }
   [@@deriving show]
 end
@@ -34,7 +53,13 @@ module Enum = struct
 end
 
 module Schema = struct
-  type t = (string * string) list
+  type root_type = | Query of string | Mutation of string  
+  and t = root_type list
+  [@@deriving show]
+end
+
+module Scalar = struct
+  type t = string
   [@@deriving show]
 end
 
@@ -44,6 +69,7 @@ module SchemaItem = struct
   | Type of Type.t
   | Enum of Enum.t
   | Schema of Schema.t
+  | Scalar of Scalar.t
   | Empty
   [@@deriving show]
 end

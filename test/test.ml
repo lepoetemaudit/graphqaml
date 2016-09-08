@@ -86,6 +86,7 @@ let test_nullable_fields test_ctxt =
                   ; T.fields = [ { F.name = "jim" 
                                  ; F.type_name = "int"
                                  ; F.null = true
+                                 ; F.params = []
                                  ; F.list = false }]} ]);
 
   assert_equal 
@@ -93,6 +94,7 @@ let test_nullable_fields test_ctxt =
        (Ok [ SI.Type { T.name = "bob"
                      ; T.fields = [ { F.name = "jim" 
                                   ; F.type_name = "int"
+                                  ; F.params = []
                                   ; F.null = false
                                   ; F.list = false }]} ]);;
   
@@ -110,6 +112,7 @@ let test_list_fields test_ctxt =
                   ; T.fields = [ { F.name = "jim" 
                                  ; F.type_name = "int"
                                  ; F.null = true
+                                 ; F.params = []
                                  ; F.list = true }]} ]);
 
   assert_equal 
@@ -118,6 +121,7 @@ let test_list_fields test_ctxt =
     (Ok [ SI.Type { T.name = "bob"
                   ; T.fields = [ { F.name = "jim" 
                                  ; F.type_name = "int"
+                                 ; F.params = []
                                  ; F.null = true
                                  ; F.list = false }]} ]);;                                 
 
@@ -136,6 +140,7 @@ let test_enum_refs test_ctxt =
         ; SI.Type { T.name = "bob"
                   ; T.fields = [ { F.name = "jim"
                                  ; F.type_name = "HUMAN"
+                                 ; F.params = []
                                  ; F.null = true
                                  ; F.list = false } ]                  
                   } 

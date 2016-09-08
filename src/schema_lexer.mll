@@ -19,6 +19,8 @@ rule read =
     | "enum"     { ENUM }
     | "schema"   { SCHEMA }
     | "mutation" { MUTATION }
+    | "scalar"   { SCALAR }
+    | '"'        { read_string (Buffer.create 17) lexbuf }
     | '{'        { LEFT_BRACE }
     | '}'        { RIGHT_BRACE }
     | '['        { LEFT_SQUARE_BRACE }
@@ -30,3 +32,12 @@ rule read =
        '_']*     { IDENTIFIER (Lexing.lexeme lexbuf) }
     | eof        { EOF }
     | _ { raise (SyntaxError ("Unexpected char: " ^ Lexing.lexeme lexbuf)) }
+
+and read_string buf =
+    parse
+    | '"'       { STRING (Buffer.contents buf) }
+    | [^ '"' '\\']+
+        { Buffer.add_string buf (Lexing.lexeme lexbuf);
+        read_string buf lexbuf
+        }
+    | eof  { raise (SyntaxError ("String is not terminated")) }
