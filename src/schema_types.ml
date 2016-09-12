@@ -17,7 +17,9 @@ end
 module Param = struct
   type t = {
     name: string;
-    type_: string;
+    type_name: string;
+    null: bool;
+    list: bool;
     default: Value.t;
   }
   [@@deriving show]

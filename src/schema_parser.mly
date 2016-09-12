@@ -2,9 +2,13 @@
 
 %token LEFT_BRACE
 %token RIGHT_BRACE
+%token LEFT_PARENS
+%token RIGHT_PARENS
 %token LEFT_SQUARE_BRACE
 %token RIGHT_SQUARE_BRACE
 %token COLON
+%token COMMA
+%token EQUALS
 %token QUERY
 %token MUTATION
 %token SCALAR
@@ -23,6 +27,11 @@
 
 %start <Schema_types.SchemaItem.t list> schema
 %%
+
+(* in certain contexts, a reserved word can be used as a normal identifer *)
+general_ident:
+    | ident = IDENTIFIER; { ident }
+    | TYPE; { "type" }
 
 schema:
     | items = schema_items; EOF; { items }   
@@ -56,19 +65,37 @@ type_:
     | ident = IDENTIFIER; LEFT_BRACE; fields = type_field; RIGHT_BRACE; 
         { SchemaItem.Type { name = ident; Type.fields = fields } }
 
+field_params:
+    | (* empty *) { [] }
+    | LEFT_PARENS; obj = separated_list(COMMA, argument); RIGHT_PARENS; { obj }
+
 type_field:
     | (* empty *) { [] }
-    | ident = IDENTIFIER; params = field_params; COLON; lt = listable_type; rs = type_field;                 
+    | ident = IDENTIFIER; fp = field_params; COLON; lt = listable_type; rs = type_field;                 
         { 
             let (nt, is_list) = lt in
             let (type_name, is_null) = nt in
-            { Field.null = is_null; name = ident; type_name = type_name; Field.list = is_list; Field.params = params; } :: rs }
+            { Field.null = is_null; name = ident; type_name = type_name; Field.list = is_list; Field.params = fp } :: rs }
     | ident = IDENTIFIER; { raise (SyntaxError ("Unexpected identifier in type field: " ^ ident)) }
 
-field_params:
-    | (* empty *) { [] }
-    | name = IDENTIFIER; COLON; type_ = IDENTIFIER; params = field_params;
-        { { Param.name = name; Param.type_ = type_; Param.default = Value.Nothing; } :: params }
+argument:
+    | name = general_ident; COLON; lt = listable_type; dv = default_value;
+        {
+            let (nt, is_list) = lt in
+            let (type_name, is_null) = nt in
+            { Param.name = name;
+              Param.null = is_null;
+              Param.type_name = type_name;
+              Param.list = is_list;
+              Param.default = dv; }
+        }
+
+default_value:
+    | (* empty *) { Value.Nothing }
+    | EQUALS; v = value; { v }
+
+value:
+    | v = STRING; { Value.String v }
 
 nullable_type:
     | kind = IDENTIFIER; EXCLAMATION;
