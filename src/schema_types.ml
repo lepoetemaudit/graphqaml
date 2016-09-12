@@ -43,7 +43,7 @@ module Type = struct
   }
   [@@deriving show]
 
-  let built_ins = ["int"; "string"; "float"; "boolean"; "id"]
+  let built_ins = ["Int"; "String"; "Float"; "Boolean"; "ID"]
 end
 
 module Enum = struct
