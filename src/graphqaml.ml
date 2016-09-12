@@ -68,11 +68,18 @@ let _validate_schema schema =
 let _parse_schema q =
     let open Schema_parser in
     let open Schema_lexer in
-    (try Ok (schema read (Lexing.from_string q)) with
+    let open Lexing in
+    let filebuf = Lexing.from_string q in
+    (try Ok (schema read filebuf) with
     | SyntaxError msg ->
         (Result.Error msg)
     | Error ->
-        (Result.Error "Undefined Parser Error (sorry)\n"))
+        let start = Lexing.lexeme_start_p filebuf in
+        let tok = Lexing.lexeme filebuf in
+        (Result.Error (Printf.sprintf "Line %d, character %d: Unexpected token '%s'\n" 
+                       start.pos_lnum
+                       (start.pos_cnum - start.pos_bol)               
+                       tok)))
     
 
 let parse_schema q =
