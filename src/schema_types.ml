@@ -76,3 +76,10 @@ module SchemaItem = struct
   [@@deriving show]
 end
 
+module Root = struct
+  type t = {
+    query: Query.t;
+    migration: Query.t
+  }
+  [@@deriving show]
+end

@@ -1,5 +1,5 @@
 OASISFormat: 0.4
-Name:        GraphQaml
+Name:        Graphqaml
 Version:     0.0.1
 Synopsis:    Parsing utilities for GraphQL
 Authors:     David Jeffrey
@@ -7,7 +7,7 @@ License:     Apache-2.0
 Plugins:     Meta (0.4), DevFiles (0.4)
 AlphaFeatures:         ocamlbuild_more_args
 
-Library "GraphQaml"
+Library "Graphqaml"
   Path:            src
   BuildDepends: 
                    oUnit,

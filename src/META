@@ -1,12 +1,12 @@
 # OASIS_START
-# DO NOT EDIT (digest: dba573f0ec38822beedd1ebef4ebb01e)
+# DO NOT EDIT (digest: 003496a5fbad37868ce2a40fe61a39f9)
 version = "0.0.1"
 description = "Parsing utilities for GraphQL"
 requires = "oUnit threads core ppx_deriving.show"
-archive(byte) = "GraphQaml.cma"
-archive(byte, plugin) = "GraphQaml.cma"
-archive(native) = "GraphQaml.cmxa"
-archive(native, plugin) = "GraphQaml.cmxs"
-exists_if = "GraphQaml.cma"
+archive(byte) = "Graphqaml.cma"
+archive(byte, plugin) = "Graphqaml.cma"
+archive(native) = "Graphqaml.cmxa"
+archive(native, plugin) = "Graphqaml.cmxs"
+exists_if = "Graphqaml.cma"
 # OASIS_STOP
 

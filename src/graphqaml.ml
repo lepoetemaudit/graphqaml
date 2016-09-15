@@ -86,6 +86,10 @@ let _parse_schema q =
                        (start.pos_cnum - start.pos_bol)               
                        tok)))
     
+let _build_ast items =
+    let pp = [%show: SchemaItem.t list] in
+    print_string (pp items);
+    Result.Ok items
 
 let parse_schema q =
-    _parse_schema q >>= _validate_schema
+    _parse_schema q >>= _validate_schema >>= _build_ast

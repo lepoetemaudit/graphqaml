@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 45f359738a5d9935365ede3d2b3db16b) *)
+(* DO NOT EDIT (digest: 3a25434037eaefa1b719744329e5cf77) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -882,7 +882,7 @@ end
 open Ocamlbuild_plugin;;
 let package_default =
   {
-     MyOCamlbuildBase.lib_ocaml = [("GraphQaml", ["src"], [])];
+     MyOCamlbuildBase.lib_ocaml = [("Graphqaml", ["src"], [])];
      lib_c = [];
      flags = [];
      includes = [("test", ["src"])]
