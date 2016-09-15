@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 7e625adf05ad62218ef0b44d7a0a3eec)
+# DO NOT EDIT (digest: 8d40e17862a9e57c2d8a91270577df84)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -17,23 +17,23 @@ true: annot, bin_annot
 # Library Graphqaml
 "src/Graphqaml.cmxs": use_Graphqaml
 # Executable gql_gen
-<src/gql_gen.{native,byte}>: pkg_core
-<src/gql_gen.{native,byte}>: pkg_oUnit
-<src/gql_gen.{native,byte}>: pkg_ppx_deriving.show
-<src/gql_gen.{native,byte}>: pkg_threads
-<src/gql_gen.{native,byte}>: use_Graphqaml
+"src/gql_gen.byte": pkg_core
+"src/gql_gen.byte": pkg_oUnit
+"src/gql_gen.byte": pkg_ppx_deriving.show
+"src/gql_gen.byte": pkg_threads
+"src/gql_gen.byte": use_Graphqaml
 <src/*.ml{,i,y}>: pkg_core
 <src/*.ml{,i,y}>: pkg_oUnit
 <src/*.ml{,i,y}>: pkg_ppx_deriving.show
 <src/*.ml{,i,y}>: pkg_threads
 <src/*.ml{,i,y}>: use_Graphqaml
 # Executable test_parsing
-<test/test.{native,byte}>: pkg_core
-<test/test.{native,byte}>: pkg_oUnit
-<test/test.{native,byte}>: pkg_ppx_deriving.show
-<test/test.{native,byte}>: pkg_str
-<test/test.{native,byte}>: pkg_threads
-<test/test.{native,byte}>: use_Graphqaml
+"test/test.byte": pkg_core
+"test/test.byte": pkg_oUnit
+"test/test.byte": pkg_ppx_deriving.show
+"test/test.byte": pkg_str
+"test/test.byte": pkg_threads
+"test/test.byte": use_Graphqaml
 <test/*.ml{,i,y}>: pkg_core
 <test/*.ml{,i,y}>: pkg_oUnit
 <test/*.ml{,i,y}>: pkg_ppx_deriving.show
